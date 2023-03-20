@@ -11,8 +11,13 @@ import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
 import Sidebar from 'primevue/sidebar'
 import InputSwitch from 'primevue/inputswitch'
+import InputText from 'primevue/inputtext'
+import AutoComplete from 'primevue/autocomplete'
+import Textarea from 'primevue/textarea'
+import Dropdown from 'primevue/dropdown'
 
 import 'normalize.css'
+import 'primeicons/primeicons.css'
 import '../public/themes/prime.css'
 
 const app = createApp(App)
@@ -43,5 +48,9 @@ app.component('ButtonPrime', Button)
 app.component('DialogPrime', Dialog)
 app.component('SidebarPrime', Sidebar)
 app.component('InputSwitchPrime', InputSwitch)
+app.component('InputTextPrime', InputText)
+app.component('AutoCompletePrime', AutoComplete)
+app.component('TextareaPrime', Textarea)
+app.component('DropdownPrime', Dropdown)
 
 app.mount('#app')

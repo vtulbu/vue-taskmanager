@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useScreenSize, useSidebar } from '@/stores'
+import NoColumns from './NoColumns.vue'
+import BoardColumns from './BoardColumns.vue'
 
 const storeSideBar = useSidebar()
 const storeScreenSize = useScreenSize()
@@ -11,7 +13,8 @@ const { isMobile } = storeToRefs(storeScreenSize)
 
 <template>
   <div class="tasks-board" :class="{ openSidebar: !isMobile && isSidebarOpen }">
-    <p class="empty-board-text">This board is empty. Create a new column to get started.</p>
+    <NoColumns />
+    <BoardColumns />
   </div>
 </template>
 
@@ -19,26 +22,14 @@ const { isMobile } = storeToRefs(storeScreenSize)
 .tasks-board {
   height: calc(100% - var(--header-height-mobile));
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: absolute;
   right: 0;
-  animation: closeSidebar 150ms forwards;
+  animation: closeSidebar 300ms ease;
 }
 
 .openSidebar {
   width: calc(100% - var(--sidebar-width-tablet));
-  animation: openSidebar 150ms forwards;
-}
-
-.empty-board-text {
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 23px;
-  letter-spacing: 0px;
-  text-align: center;
-  color: var(--medium-grey);
+  animation: openSidebar 300ms ease;
 }
 
 @media (min-width: 768px) {

@@ -1,14 +1,27 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import { useSidebar } from '@/stores'
+import { useBoards, useSidebar } from '@/stores'
 import IconBoard from './icons/IconBoard.vue'
+import { useRouter } from 'vue-router'
+import { CREATE } from '@/constants'
 
+const router = useRouter()
+const storeBoards = useBoards()
 const storeSidebar = useSidebar()
+const { selectedItem, boards } = storeToRefs(storeBoards)
 
-const { selectedItem, boards } = storeToRefs(storeSidebar)
+const selectItem = (id: string) => {
+  storeBoards.selectItem(id)
+}
 
-const selectItem = (item: { id: string; label: string }) => {
-  storeSidebar.selectItem(item)
+const toggleCreatingModal = () => {
+  router.push({
+    query: {
+      ...router.currentRoute.value.query,
+      boardAction: CREATE
+    }
+  })
+  storeSidebar.toggleSidebar()
 }
 </script>
 
@@ -21,12 +34,12 @@ const selectItem = (item: { id: string; label: string }) => {
         v-for="board in boards"
         v-bind:key="board.label"
         :class="{ active: selectedItem?.id === board.id }"
-        @click="selectItem(board)"
+        @click="selectItem(board.id)"
       >
         <IconBoard />
         <p class="text-label">{{ board.label }}</p>
       </li>
-      <li class="item-board create-button">
+      <li class="item-board create-button" @click="toggleCreatingModal">
         <IconBoard />
         <p>+ Create New Board</p>
       </li>
