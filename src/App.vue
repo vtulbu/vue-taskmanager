@@ -1,28 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import HeaderDashboard from './components/HeaderDashboard.vue'
-import Sidebar from './components/SideBar.vue'
-import Button from 'primevue/button'
-
-const toggleTheme = ref(localStorage.getItem('theme') === 'dark')
-
-const changeTheme = () => {
-  console.log('theme', toggleTheme)
-  if (toggleTheme.value) {
-    document.getElementById('theme-link')?.setAttribute('href', '/themes/dark.css')
-  } else {
-    document.getElementById('theme-link')?.setAttribute('href', '/themes/light.css')
-  }
-  toggleTheme.value = !toggleTheme.value
-  localStorage.setItem('theme', toggleTheme.value ? 'dark' : 'light')
-}
+import ShowSidebarButtonVue from './components/ShowSidebarButton.vue'
+import SidebarApp from './components/SidebarApp.vue'
+import TasksBoard from './components/TasksBoard.vue'
 </script>
 
 <template>
   <div class="dashboard-app">
-    <HeaderDashboard boardName="test" />
-    <Sidebar />
-    <Button icon="pi pi-arrow-right" @click="changeTheme">Change</Button>
+    <HeaderDashboard />
+    <SidebarApp />
+    <ShowSidebarButtonVue />
+    <TasksBoard />
   </div>
 </template>
 
@@ -30,5 +18,6 @@ const changeTheme = () => {
 .dashboard-app {
   height: 100vh;
   width: 100vw;
+  background: var(--background-theme);
 }
 </style>
