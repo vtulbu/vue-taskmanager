@@ -6,6 +6,7 @@ import TextFieldVue from './TextField.vue'
 import TypographyElement from './TypographyElement.vue'
 import IconCross from './icons/IconCross.vue'
 import { EDIT } from '@/constants'
+import router from '@/router'
 
 const idForm = 'create-edit-task'
 
@@ -52,7 +53,7 @@ const deleteColumn = (id: number) => {
 const resetForm = () => {
   formInput.title = ''
   formInput.description = ''
-  formInput.columnId = null
+  formInput.columnId = columns.value?.[0].id || null
   formInput.subtasks = []
 }
 
@@ -74,6 +75,16 @@ const onUpdateSubtask = (e: string, index: number) => {
   formInput.subtasks[index] = e
 }
 
+const onCloseDialog = () => {
+  router.push({
+    query: {
+      boardId: selectedItem.value?.id
+    }
+  })
+
+  resetForm()
+}
+
 watchEffect(() => {
   if (columns.value?.length) {
     formInput.columnId = columns.value[0].id
@@ -82,7 +93,13 @@ watchEffect(() => {
 </script>
 
 <template>
-  <DialogPrime v-model:visible="isTaskModalOpen" modal position="top" dismissableMask>
+  <DialogPrime
+    v-model:visible="isTaskModalOpen"
+    modal
+    position="top"
+    dismissableMask
+    @update:visible="onCloseDialog"
+  >
     <div class="dialog-content">
       <TypographyElement as="h4" v-bind:text="action === EDIT ? 'Edit Task' : 'Add New Task'" />
       <form :id="idForm">

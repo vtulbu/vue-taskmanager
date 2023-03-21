@@ -1,23 +1,40 @@
 import { boardsMock } from '@/constants'
 import { camelCase } from 'lodash'
-import { defineStore } from 'pinia'
+import { defineStore, storeToRefs } from 'pinia'
 import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
+import { useRouteListener } from './useRouteListener'
 
 export const useBoards = defineStore('boards', () => {
   const router = useRouter()
   const boards = ref(boardsMock)
   const selectedItem = ref<(typeof boardsMock)[0] | undefined>(undefined)
+  const routeListener = useRouteListener()
+  const { isRouterReady } = storeToRefs(routeListener)
 
   const selectItem = (id: string, cleanQuery?: boolean) => {
-    selectedItem.value = boards.value.find((b) => b.id === id)
+    const board = boards.value.find((b) => b.id === id)
 
-    router.push({
-      query: {
-        ...(cleanQuery ? {} : router.currentRoute.value.query),
-        boardId: id
+    if (board) {
+      selectedItem.value = board
+
+      if (cleanQuery) {
+        router.push({
+          name: 'Boards',
+          query: {
+            boardId: board.id
+          }
+        })
+      } else {
+        router.push({
+          name: 'Boards',
+          query: {
+            ...router.currentRoute.value.query,
+            boardId: board.id
+          }
+        })
       }
-    })
+    }
   }
 
   const addNewBoard = (newBoard: { name: string; columns: string[] }) => {
@@ -90,15 +107,26 @@ export const useBoards = defineStore('boards', () => {
   }
 
   watchEffect(() => {
-    if (!selectedItem.value) {
-      selectItem(boards.value[0].id)
+    const { boardId } = router.currentRoute.value.query
+
+    if (isRouterReady.value) {
+      if (boardId) {
+        const board = boards.value.find((b) => b.id === boardId)
+
+        if (board) {
+          selectedItem.value = board
+        } else {
+          selectItem(boards.value[0].id, true)
+        }
+      } else {
+        selectItem(boards.value[0].id, true)
+      }
     }
   })
 
   return {
     selectedItem,
     boards,
-    selectItem,
     addNewBoard,
     deleteBoard,
     updateBoard,

@@ -15,6 +15,7 @@ import InputText from 'primevue/inputtext'
 import AutoComplete from 'primevue/autocomplete'
 import Textarea from 'primevue/textarea'
 import Dropdown from 'primevue/dropdown'
+import ProgressSpinner from 'primevue/progressspinner'
 
 import 'normalize.css'
 import 'primeicons/primeicons.css'
@@ -52,5 +53,6 @@ app.component('InputTextPrime', InputText)
 app.component('AutoCompletePrime', AutoComplete)
 app.component('TextareaPrime', Textarea)
 app.component('DropdownPrime', Dropdown)
+app.component('ProgressSpinnerPrime', ProgressSpinner)
 
 app.mount('#app')

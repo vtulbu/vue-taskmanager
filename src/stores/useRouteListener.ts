@@ -1,14 +1,19 @@
 import { CREATE, EDIT } from '@/constants'
 import { defineStore } from 'pinia'
-import { ref, watchEffect } from 'vue'
+import { onMounted, ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 
 export const useRouteListener = defineStore('routeListener', () => {
   const router = useRouter()
-
+  const isRouterReady = ref(false)
   const isBoardModalOpen = ref(false)
   const isTaskModalOpen = ref(false)
   const action = ref<typeof CREATE | typeof EDIT | null>(null)
+
+  onMounted(async () => {
+    await router.isReady()
+    isRouterReady.value = true
+  })
 
   watchEffect(() => {
     const { boardAction, taskAction } = router.currentRoute.value.query
@@ -29,6 +34,7 @@ export const useRouteListener = defineStore('routeListener', () => {
   })
 
   return {
+    isRouterReady,
     isBoardModalOpen,
     isTaskModalOpen,
     action

@@ -11,7 +11,11 @@ const storeSidebar = useSidebar()
 const { selectedItem, boards } = storeToRefs(storeBoards)
 
 const selectItem = (id: string) => {
-  storeBoards.selectItem(id)
+  router.push({
+    query: {
+      boardId: id
+    }
+  })
 }
 
 const toggleCreatingModal = () => {

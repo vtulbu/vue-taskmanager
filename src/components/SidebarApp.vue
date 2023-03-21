@@ -14,7 +14,12 @@ const { isMobile } = storeToRefs(storeScreenSize)
   <DialogPrime v-if="isMobile" v-model:visible="isSidebarOpen" modal position="top">
     <ContentSidebar />
   </DialogPrime>
-  <SidebarPrime v-model:visible="isSidebarOpen" v-if="!isMobile" v-bind:dismissable="false">
+  <SidebarPrime
+    v-model:visible="isSidebarOpen"
+    v-if="!isMobile"
+    v-bind:dismissable="false"
+    v-bind:modal="false"
+  >
     <ContentSidebar />
   </SidebarPrime>
 </template>

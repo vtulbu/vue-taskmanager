@@ -6,6 +6,7 @@ import TextFieldVue from './TextField.vue'
 import TypographyElement from './TypographyElement.vue'
 import IconCross from './icons/IconCross.vue'
 import { EDIT } from '@/constants'
+import router from '@/router'
 
 const idForm = 'create-edit-board'
 
@@ -55,6 +56,17 @@ const onUpdateColumn = (e: string, index: number) => {
   formInput.columns[index] = e
 }
 
+const onCloseDialog = () => {
+  router.push({
+    query: {
+      boardId: selectedItem.value?.id
+    }
+  })
+
+  formInput.name = ''
+  formInput.columns = []
+}
+
 watchEffect(() => {
   if (action.value === EDIT && selectedItem.value) {
     const { label, columns } = selectedItem.value
@@ -65,7 +77,13 @@ watchEffect(() => {
 </script>
 
 <template>
-  <DialogPrime v-model:visible="isBoardModalOpen" modal position="top" dismissableMask>
+  <DialogPrime
+    v-model:visible="isBoardModalOpen"
+    modal
+    position="top"
+    dismissableMask
+    @update:visible="onCloseDialog"
+  >
     <div class="dialog-content">
       <TypographyElement as="h4" v-bind:text="action === EDIT ? 'Edit Board' : 'Add New Board'" />
       <form :id="idForm">

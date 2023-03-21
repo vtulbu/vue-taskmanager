@@ -28,13 +28,16 @@ const { isMobile } = storeToRefs(storeScreenSize)
 }
 
 .openSidebar {
-  width: calc(100% - var(--sidebar-width-tablet));
   animation: openSidebar 300ms ease;
 }
 
 @media (min-width: 768px) {
   .tasks-board {
     height: calc(100% - var(--header-height-tablet));
+  }
+
+  .openSidebar {
+    width: calc(100% - var(--sidebar-width-tablet));
   }
 
   @keyframes openSidebar {
@@ -59,6 +62,10 @@ const { isMobile } = storeToRefs(storeScreenSize)
 @media (min-width: 1440px) {
   .tasks-board {
     height: calc(100% - var(--header-height-desktop));
+  }
+
+  .openSidebar {
+    width: calc(100% - var(--sidebar-width-desktop));
   }
 
   @keyframes openSidebar {
