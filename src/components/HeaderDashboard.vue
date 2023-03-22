@@ -1,39 +1,62 @@
 <script setup lang="ts">
-import { useScreenSize, useTheme, useSidebar } from '@/stores'
+import { useScreenSize, useTheme, useSidebar, useBoards, useRouteListener } from '@/stores'
 import { storeToRefs } from 'pinia'
+import TypographyElement from './TypographyElement.vue'
+import { useRouter } from 'vue-router'
+import { CREATE } from '@/constants'
+import LogoMobile from './icons/LogoMobile.vue'
+import LogoDark from './icons/LogoDark.vue'
+import LogoLight from './icons/LogoLight.vue'
 
+const router = useRouter()
 const storeTheme = useTheme()
 const storeScreenSize = useScreenSize()
 const storeSideBar = useSidebar()
+const storeBoards = useBoards()
+const storeRoute = useRouteListener()
 
 const { isDark } = storeToRefs(storeTheme)
 const { isMobile } = storeToRefs(storeScreenSize)
-const { isSidebarOpen, selectedItem } = storeToRefs(storeSideBar)
+const { isSidebarOpen } = storeToRefs(storeSideBar)
+const { selectedItem } = storeToRefs(storeBoards)
+const { isTaskModalOpen, isBoardModalOpen } = storeToRefs(storeRoute)
 
 const toggleSidebar = () => {
-  isMobile.value && storeSideBar.toggleSidebar()
+  isMobile.value &&
+    !(isTaskModalOpen.value || isBoardModalOpen.value) &&
+    storeSideBar.toggleSidebar()
 }
 
-const toggleTheme = () => {
-  storeTheme.toggleTheme()
+const addTask = () => {
+  router.push({
+    query: {
+      ...router.currentRoute.value.query,
+      taskAction: CREATE
+    }
+  })
 }
 </script>
 
 <template>
   <header :class="{ openSideBar: isSidebarOpen, closedSideBar: !isSidebarOpen }">
     <div class="left-side">
-      <img v-if="isMobile" src="/icons/logo-mobile.svg" alt="logo" />
-      <img v-if="!isMobile && isDark" src="/icons/logo-light.svg" alt="logo" />
-      <img v-if="!isMobile && !isDark" src="/icons/logo-dark.svg" alt="logo" />
+      <LogoMobile v-if="isMobile" />
+      <LogoDark v-if="!isMobile && !isDark" />
+      <LogoLight v-if="!isMobile && isDark" />
       <div class="divider" v-if="!isMobile" />
       <div @click="toggleSidebar" class="container-board-name">
-        <h1>{{ selectedItem?.label }}</h1>
+        <TypographyElement as="h2" v-bind:text="selectedItem?.label" />
         <img v-if="isMobile && !isSidebarOpen" src="/icons/icon-chevron-down.svg" alt="icon-down" />
         <img v-if="isMobile && isSidebarOpen" src="/icons/icon-chevron-up.svg" alt="icon-right" />
       </div>
     </div>
     <div class="right-side">
-      <ButtonPrime @click="toggleTheme" label="+ Add new task" disabled>
+      <ButtonPrime
+        @click="addTask"
+        label="+ Add new task"
+        v-bind:disabled="Boolean(!selectedItem?.columns.length)"
+        class="button-header"
+      >
         <img v-if="isMobile" src="/icons/icon-add-task-mobile.svg" alt="icon-search" />
       </ButtonPrime>
       <img src="/icons/icon-vertical-ellipsis.svg" alt="vertical-ellipses" />
@@ -80,8 +103,12 @@ h1 {
   top: 0;
   left: var(--sidebar-width-tablet);
   width: 1px;
-  height: 84px;
+  height: var(--header-height-tablet);
   background-color: var(--lines);
+}
+
+.button-header {
+  padding: 10px 18px;
 }
 
 @media (min-width: 768px) {
@@ -109,10 +136,14 @@ h1 {
     opacity: 1;
   }
 
+  .button-header {
+    padding: 15px 25px;
+  }
+
   .openSideBar::before {
     content: '';
     position: absolute;
-    top: 84px;
+    top: var(--header-height-tablet);
     right: 0;
     width: calc(100% - var(--sidebar-width-tablet));
     height: 1px;
@@ -122,7 +153,7 @@ h1 {
   .closedSideBar::before {
     content: '';
     position: absolute;
-    top: 84px;
+    top: var(--header-height-tablet);
     right: 0;
     width: 100%;
     height: 1px;
@@ -151,16 +182,16 @@ h1 {
   }
 
   .divider {
-    height: 110px;
+    height: var(--header-height-desktop);
     left: var(--sidebar-width-desktop);
   }
 
   .openSideBar::before {
-    top: 110px;
+    top: var(--header-height-desktop);
     width: calc(100% - var(--sidebar-width-desktop));
   }
   .closedSideBar::before {
-    top: 110px;
+    top: var(--header-height-desktop);
   }
 }
 </style>
