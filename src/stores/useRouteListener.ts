@@ -1,4 +1,4 @@
-import { CREATE, EDIT } from '@/constants'
+import { CREATE, DELETE, EDIT } from '@/constants'
 import { defineStore } from 'pinia'
 import { onMounted, ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
@@ -8,7 +8,8 @@ export const useRouteListener = defineStore('routeListener', () => {
   const isRouterReady = ref(false)
   const isBoardModalOpen = ref(false)
   const isTaskModalOpen = ref(false)
-  const action = ref<typeof CREATE | typeof EDIT | null>(null)
+  const isDeleteBoardModalOpen = ref(false)
+  const action = ref<typeof CREATE | typeof EDIT | typeof DELETE | null>(null)
 
   onMounted(async () => {
     await router.isReady()
@@ -26,9 +27,15 @@ export const useRouteListener = defineStore('routeListener', () => {
       action.value = taskAction
     }
 
+    if (boardAction === DELETE) {
+      isDeleteBoardModalOpen.value = true
+      action.value = boardAction
+    }
+
     if (!boardAction && !taskAction) {
       isBoardModalOpen.value = false
       isTaskModalOpen.value = false
+      isDeleteBoardModalOpen.value = false
       action.value = null
     }
   })
@@ -37,6 +44,7 @@ export const useRouteListener = defineStore('routeListener', () => {
     isRouterReady,
     isBoardModalOpen,
     isTaskModalOpen,
+    isDeleteBoardModalOpen,
     action
   }
 })

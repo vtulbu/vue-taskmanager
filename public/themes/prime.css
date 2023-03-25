@@ -1735,6 +1735,7 @@ button {
   border-radius: 24px;
   font-weight: 700;
   font-size: 13px;
+  cursor: pointer;
   /* line-height: 23px; */
 }
 .p-button:enabled:hover {
@@ -4424,7 +4425,8 @@ button {
   margin-left: 1rem;
 }
 .p-overlaypanel {
-  background: #fff;
+  /* background: #fff; */
+  background: var(--dialog-delete-edit-board);
   color: #495057;
   border: 0 none;
   border-radius: 4px;
@@ -4451,12 +4453,12 @@ button {
 .p-overlaypanel:after {
   border: solid transparent;
   border-color: rgba(255, 255, 255, 0);
-  border-bottom-color: #fff;
+  border-bottom-color: var(--dialog-delete-edit-board);
 }
 .p-overlaypanel:before {
   border: solid transparent;
   border-color: rgba(255, 255, 255, 0);
-  border-bottom-color: #f2f2f2;
+  border-bottom-color: var(--dialog-delete-edit-board);
 }
 .p-overlaypanel.p-overlaypanel-flipped:after {
   border-top-color: #fff;

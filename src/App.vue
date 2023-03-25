@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, watchEffect } from 'vue'
 import { storeToRefs } from 'pinia'
 import AddEditBoard from './components/AddEditBoard.vue'
 import AddEditTask from './components/AddEditTask.vue'
@@ -7,7 +8,7 @@ import ShowSidebarButtonVue from './components/ShowSidebarButton.vue'
 import SidebarApp from './components/SidebarApp.vue'
 import TasksBoard from './components/TasksBoard.vue'
 import { useRouteListener } from './stores'
-import { ref, watchEffect } from 'vue'
+import DeleteModal from './components/DeleteModal.vue'
 
 const storeRouteListener = useRouteListener()
 const { isRouterReady } = storeToRefs(storeRouteListener)
@@ -33,6 +34,7 @@ watchEffect(() => {
     <TasksBoard />
     <AddEditBoard />
     <AddEditTask />
+    <DeleteModal />
   </div>
 </template>
 

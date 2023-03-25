@@ -19,4 +19,5 @@
   --background-theme: var(--light-grey);
   --background-switcher: var(--light-grey);
   --hover-item-boards: #828fa333;
+  --dialog-delete-edit-board: var(--white);
 }

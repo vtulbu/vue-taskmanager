@@ -57,3 +57,4 @@ export const boardsMock = [
 
 export const CREATE = 'create' as const
 export const EDIT = 'edit' as const
+export const DELETE = 'delete' as const

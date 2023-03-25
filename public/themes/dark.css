@@ -19,4 +19,5 @@
   --background-theme: var(--very-dark-gray);
   --background-switcher: var(--very-dark-gray);
   --hover-item-boards: #20212c66;
+  --dialog-delete-edit-board: var(--very-dark-gray);
 }

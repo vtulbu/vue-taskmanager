@@ -7,6 +7,7 @@ import { CREATE } from '@/constants'
 import LogoMobile from './icons/LogoMobile.vue'
 import LogoDark from './icons/LogoDark.vue'
 import LogoLight from './icons/LogoLight.vue'
+import EditDeleteBoardButtonVue from './EditDeleteBoardButton.vue'
 
 const router = useRouter()
 const storeTheme = useTheme()
@@ -59,7 +60,7 @@ const addTask = () => {
       >
         <img v-if="isMobile" src="/icons/icon-add-task-mobile.svg" alt="icon-search" />
       </ButtonPrime>
-      <img src="/icons/icon-vertical-ellipsis.svg" alt="vertical-ellipses" />
+      <EditDeleteBoardButtonVue />
     </div>
   </header>
 </template>
@@ -87,6 +88,10 @@ h1 {
   display: flex;
   align-items: center;
   gap: 16px;
+}
+
+.right-side {
+  gap: 4px;
 }
 
 .container-board-name:hover {
@@ -122,7 +127,6 @@ h1 {
   }
 
   .left-side,
-  .right-side,
   .container-board-name {
     gap: 24px;
   }
@@ -172,7 +176,6 @@ h1 {
   }
 
   .left-side,
-  .right-side,
   .container-board-name {
     gap: 32px;
   }
