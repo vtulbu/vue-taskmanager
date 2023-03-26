@@ -1,5 +1,5 @@
 import { boardsMock } from '@/constants'
-import { camelCase } from 'lodash'
+import { camelCase, uniqueId } from 'lodash'
 import { defineStore, storeToRefs } from 'pinia'
 import { ref, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
@@ -37,14 +37,14 @@ export const useBoards = defineStore('boards', () => {
     }
   }
 
-  const addNewBoard = (newBoard: { name: string; columns: string[] }) => {
+  const addNewBoard = (newBoard: { name: string; columns: { id?: string; label: string }[] }) => {
     const board = {
-      id: camelCase(newBoard.name),
+      id: uniqueId(camelCase(newBoard.name)),
       label: newBoard.name,
       columns: newBoard.columns.map((c) => {
         return {
-          id: camelCase(c),
-          label: c,
+          id: uniqueId(camelCase(c.label)),
+          label: c.label,
           tasks: []
         }
       })
@@ -53,15 +53,31 @@ export const useBoards = defineStore('boards', () => {
     selectItem(board.id, true)
   }
 
-  const updateBoard = (board: { name: string; columns: string[] }, id: string) => {
+  const updateBoard = (
+    board: { name: string; columns: { id?: string; label: string }[] },
+    id: string
+  ) => {
     const index = boards.value.findIndex((b) => b.id === id)
+
+    const currentBoard = boards.value[index]
+
     boards.value[index] = {
-      id: camelCase(board.name),
+      id,
       label: board.name,
       columns: board.columns.map((c) => {
+        const column = currentBoard.columns.find((col) => col.id === c.id)
+
+        if (column) {
+          return {
+            id: column.id,
+            label: c.label,
+            tasks: column.tasks
+          }
+        }
+
         return {
-          id: camelCase(c),
-          label: c,
+          id: uniqueId(camelCase(c.label)),
+          label: c.label,
           tasks: []
         }
       })
@@ -79,19 +95,19 @@ export const useBoards = defineStore('boards', () => {
     title: string
     description: string
     columnId: string | null
-    subtasks: string[]
+    subtasks: { id?: string; label: string }[]
   }) => {
     const column = selectedItem.value?.columns.find((c) => c.id === task.columnId)
 
     if (column) {
       column.tasks.push({
-        id: camelCase(task.title),
+        id: uniqueId(camelCase(task.title)),
         title: task.title,
         description: task.description,
         subtasks: task.subtasks.map((s) => {
           return {
-            id: camelCase(s),
-            label: s,
+            id: uniqueId(camelCase(s.label)),
+            label: s.label,
             isDone: false
           }
         })
@@ -104,6 +120,91 @@ export const useBoards = defineStore('boards', () => {
         }
       })
     }
+  }
+
+  const updateTask = (
+    task: {
+      title: string
+      description: string
+      columnId: string | null
+      subtasks: { id?: string; label: string }[]
+    },
+    editedTaskId: string
+  ) => {
+    const { columnId } = router.currentRoute.value.query
+    const currentColumn = selectedItem.value?.columns.find((c) => c.id === columnId)
+    const taskIndex = currentColumn?.tasks.findIndex((t) => t.id === editedTaskId)
+
+    if (taskIndex !== undefined && taskIndex !== -1) {
+      const column = selectedItem.value?.columns.find((c) => c.id === task.columnId)
+
+      if (column) {
+        column.tasks.push({
+          id: editedTaskId,
+          title: task.title,
+          description: task.description,
+          subtasks: task.subtasks.map((s) => {
+            const subtask = currentColumn?.tasks[taskIndex]?.subtasks.find((sub) => sub.id === s.id)
+
+            if (subtask) {
+              return {
+                id: subtask.id,
+                label: s.label,
+                isDone: subtask.isDone
+              }
+            }
+
+            return {
+              id: uniqueId(camelCase(s.label)),
+              label: s.label,
+              isDone: false
+            }
+          })
+        })
+
+        currentColumn?.tasks.splice(taskIndex, 1)
+
+        router.push({
+          name: 'Boards',
+          query: {
+            boardId: selectedItem.value?.id
+          }
+        })
+      }
+    }
+  }
+
+  const deleteTask = (taskId: string) => {
+    const { columnId } = router.currentRoute.value.query
+    const column = selectedItem.value?.columns.find((c) => c.id === columnId)
+    const taskIndex = column?.tasks.findIndex((t) => t.id === taskId)
+
+    if (taskIndex !== undefined && taskIndex !== -1) {
+      column?.tasks.splice(taskIndex, 1)
+    }
+  }
+
+  const updateTaskStatus = (newColumnId: string) => {
+    const { columnId, taskId } = router.currentRoute.value.query
+
+    const newColumn = selectedItem.value?.columns.find((c) => c.id === newColumnId)
+    const oldColumn = selectedItem.value?.columns.find((c) => c.id === columnId)
+    const taskIndex = oldColumn?.tasks.findIndex((t) => t.id === taskId)
+
+    if (taskIndex !== undefined && taskIndex !== -1 && oldColumn) {
+      newColumn?.tasks.push(oldColumn?.tasks[taskIndex])
+      oldColumn?.tasks.splice(taskIndex, 1)
+    }
+  }
+
+  const updateSubtaskStatus = (checkedSubtaskIds: string[] | undefined) => {
+    const { columnId, taskId } = router.currentRoute.value.query
+    const column = selectedItem.value?.columns.find((c) => c.id === columnId)
+    const task = column?.tasks.find((t) => t.id === taskId)
+
+    task?.subtasks.forEach((s) => {
+      s.isDone = checkedSubtaskIds?.includes(s.id) || false
+    })
   }
 
   watchEffect(() => {
@@ -130,6 +231,10 @@ export const useBoards = defineStore('boards', () => {
     addNewBoard,
     deleteBoard,
     updateBoard,
-    createTask
+    createTask,
+    deleteTask,
+    updateTask,
+    updateTaskStatus,
+    updateSubtaskStatus
   }
 })

@@ -20,4 +20,7 @@
   --background-switcher: var(--light-grey);
   --hover-item-boards: #828fa333;
   --dialog-delete-edit-board: var(--white);
+  --button-text: #635fc71a;
+  --hover-card: var(--light-grey);
+  --text-color-theme: var(--black);
 }

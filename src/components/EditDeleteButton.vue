@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-import { DELETE, EDIT } from '@/constants'
+import { BOARD, DELETE, EDIT, TASK } from '@/constants'
 import { ref } from 'vue'
+
+const props = defineProps<{
+  forItem: typeof TASK | typeof BOARD
+}>()
 
 const router = useRouter()
 const overlay = ref()
@@ -10,11 +14,22 @@ const toggleOverlay = (event: any) => {
   overlay.value.toggle(event)
 }
 
-const editBoard = () => {
+const onEditClick = () => {
   overlay.value.hide()
+
+  if (props.forItem === TASK) {
+    router.push({
+      query: {
+        ...router.currentRoute.value.query,
+        taskAction: EDIT
+      }
+    })
+    return
+  }
+
   router.push({
     query: {
-      ...router.currentRoute.value.query,
+      boardId: router.currentRoute.value.query.boardId,
       boardAction: EDIT
     }
   })
@@ -22,6 +37,17 @@ const editBoard = () => {
 
 const openDeleteDialog = () => {
   overlay.value.hide()
+
+  if (props.forItem === TASK) {
+    router.push({
+      query: {
+        ...router.currentRoute.value.query,
+        taskAction: DELETE
+      }
+    })
+
+    return
+  }
   router.push({
     query: {
       ...router.currentRoute.value.query,
@@ -35,10 +61,12 @@ const openDeleteDialog = () => {
   <ButtonPrime text class="icon-button" @click="toggleOverlay">
     <img src="/icons/icon-vertical-ellipsis.svg" alt="vertical-ellipses" />
   </ButtonPrime>
-  <OverlayPanelPrime ref="overlay" baseZIndex="1300">
+  <OverlayPanelPrime ref="overlay" v-bind:baseZIndex="1300">
     <div class="content-overlay">
-      <button text class="button-overlay" @click="editBoard">Edit Board</button>
-      <button text class="button-overlay red" @click="openDeleteDialog">Delete Board</button>
+      <button text class="button-overlay" @click="onEditClick">Edit {{ props.forItem }}</button>
+      <button text class="button-overlay red" @click="openDeleteDialog">
+        Delete {{ props.forItem }}
+      </button>
     </div>
   </OverlayPanelPrime>
 </template>
@@ -46,6 +74,7 @@ const openDeleteDialog = () => {
 <style scoped>
 .icon-button {
   background-color: transparent !important;
+  padding: 0 !important;
 }
 
 .content-overlay {

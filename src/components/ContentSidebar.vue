@@ -13,7 +13,7 @@ const { isMobile } = storeToRefs(storeScreenSize)
 <template>
   <div class="content-sidebar">
     <ContainerBoardsVue />
-    <div>
+    <div class="bottom-content">
       <SwitcherTheme />
       <HideSidebarButton v-if="!isMobile" />
     </div>
@@ -23,6 +23,11 @@ const { isMobile } = storeToRefs(storeScreenSize)
 <style scoped>
 .content-sidebar {
   margin: 16px 0;
+}
+
+.bottom-content {
+  display: flex;
+  flex-direction: column;
 }
 
 @media (min-width: 768px) {

@@ -7,6 +7,7 @@ import TypographyElement from './TypographyElement.vue'
 import IconCross from './icons/IconCross.vue'
 import { EDIT } from '@/constants'
 import router from '@/router'
+import TaskStatus from './TaskStatus.vue'
 
 const idForm = 'create-edit-task'
 
@@ -25,7 +26,7 @@ const formInput = reactive<{
   title: string
   description: string
   columnId: string | null
-  subtasks: string[]
+  subtasks: { id?: string; label: string }[]
 }>({
   title: '',
   description: '',
@@ -35,7 +36,7 @@ const formInput = reactive<{
 
 const isValid = computed(() => {
   if (formInput.title.length) {
-    return formInput.title.length > 0 && formInput.subtasks.every((item) => item.length > 0)
+    return formInput.title.length > 0 && formInput.subtasks.every((item) => item.label.length > 0)
   }
 
   return formInput.title.length > 0
@@ -43,7 +44,7 @@ const isValid = computed(() => {
 
 const createNewColumn = (e: { preventDefault: () => void }) => {
   e.preventDefault()
-  formInput.subtasks.push('')
+  formInput.subtasks.push({ label: '' })
 }
 
 const deleteColumn = (id: number) => {
@@ -59,7 +60,13 @@ const resetForm = () => {
 
 const submitForm = (e: { preventDefault: () => void }) => {
   e.preventDefault()
-  storeBoards.createTask(formInput)
+
+  if (action.value === EDIT) {
+    storeBoards.updateTask(formInput, router.currentRoute.value.query.taskId as string)
+  } else {
+    storeBoards.createTask(formInput)
+  }
+
   resetForm()
 }
 
@@ -72,7 +79,7 @@ const onUpdateDescription = (e: string) => {
 }
 
 const onUpdateSubtask = (e: string, index: number) => {
-  formInput.subtasks[index] = e
+  formInput.subtasks[index].label = e
 }
 
 const onCloseDialog = () => {
@@ -89,6 +96,18 @@ watchEffect(() => {
   if (columns.value?.length) {
     formInput.columnId = columns.value[0].id
   }
+
+  if (action.value === EDIT && selectedItem.value) {
+    const { columnId, taskId } = router.currentRoute.value.query
+
+    const column = selectedItem.value?.columns.find((column) => column.id === columnId)
+    const task = column?.tasks.find((task) => task.id === taskId)
+
+    formInput.title = task?.title || ''
+    formInput.description = task?.description || ''
+    formInput.columnId = columnId as string
+    formInput.subtasks = task?.subtasks.map((item) => ({ id: item.id, label: item.label })) || []
+  }
 })
 </script>
 
@@ -96,7 +115,6 @@ watchEffect(() => {
   <DialogPrime
     v-model:visible="isTaskModalOpen"
     modal
-    position="top"
     dismissableMask
     @update:visible="onCloseDialog"
   >
@@ -124,7 +142,10 @@ watchEffect(() => {
             >Subtasks</label
           >
           <div v-for="(item, index) in formInput.subtasks" v-bind:key="index" class="column-field">
-            <TextFieldVue v-bind:value="item" @update:value="(e) => onUpdateSubtask(e, index)" />
+            <TextFieldVue
+              v-bind:value="item.label"
+              @update:value="(e) => onUpdateSubtask(e, index)"
+            />
             <IconCross @click="deleteColumn(index)" />
           </div>
           <ButtonPrime
@@ -135,17 +156,11 @@ watchEffect(() => {
             :class="{ darkTextButton: isDark }"
           />
         </div>
-        <div style="display: flex; flex-direction: column">
-          <label class="label-textfield" :class="{ darkLabel: isDark }">Status</label>
-          <DropdownPrime
-            v-model="formInput.columnId"
-            placeholder="Select a Column"
-            :options="columns"
-            optionLabel="label"
-            optionValue="id"
-            dataKey="id"
-          />
-        </div>
+        <TaskStatus
+          label="Status"
+          v-bind:value="formInput.columnId || ''"
+          @update:value="formInput.columnId = $event"
+        />
       </form>
       <ButtonPrime
         type="submit"

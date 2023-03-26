@@ -9,6 +9,7 @@ import SidebarApp from './components/SidebarApp.vue'
 import TasksBoard from './components/TasksBoard.vue'
 import { useRouteListener } from './stores'
 import DeleteModal from './components/DeleteModal.vue'
+import ViewTaskModal from './components/ViewTaskModal.vue'
 
 const storeRouteListener = useRouteListener()
 const { isRouterReady } = storeToRefs(storeRouteListener)
@@ -35,6 +36,7 @@ watchEffect(() => {
     <AddEditBoard />
     <AddEditTask />
     <DeleteModal />
+    <ViewTaskModal />
   </div>
 </template>
 
