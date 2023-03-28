@@ -10,10 +10,13 @@ import router from '@/router'
 
 const idForm = 'create-edit-board'
 
-const formInput = reactive<{ name: string; columns: string[] }>({ name: '', columns: [] })
+const formInput = reactive<{ name: string; columns: { id?: string; label: string }[] }>({
+  name: '',
+  columns: []
+})
 const isValid = computed(() => {
   if (formInput.columns.length) {
-    return formInput.name.length > 0 && formInput.columns.every((item) => item.length > 0)
+    return formInput.name.length > 0 && formInput.columns.every((item) => item.label.length > 0)
   }
 
   return formInput.name.length > 0
@@ -29,7 +32,7 @@ const { action, isBoardModalOpen } = storeToRefs(storeRouteListener)
 
 const createNewColumn = (e: { preventDefault: () => void }) => {
   e.preventDefault()
-  formInput.columns.push('')
+  formInput.columns.push({ label: '' })
 }
 
 const deleteColumn = (id: number) => {
@@ -53,7 +56,7 @@ const onUpdateName = (e: string) => {
 }
 
 const onUpdateColumn = (e: string, index: number) => {
-  formInput.columns[index] = e
+  formInput.columns[index].label = e
 }
 
 const onCloseDialog = () => {
@@ -68,10 +71,12 @@ const onCloseDialog = () => {
 }
 
 watchEffect(() => {
-  if (action.value === EDIT && selectedItem.value) {
+  const { boardAction } = router.currentRoute.value.query
+
+  if (boardAction === EDIT && action.value === EDIT && selectedItem.value) {
     const { label, columns } = selectedItem.value
     formInput.name = label
-    formInput.columns = columns.map((item) => item.label)
+    formInput.columns = columns.map((item) => ({ id: item.id, label: item.label }))
   }
 })
 </script>
@@ -80,7 +85,6 @@ watchEffect(() => {
   <DialogPrime
     v-model:visible="isBoardModalOpen"
     modal
-    position="top"
     dismissableMask
     @update:visible="onCloseDialog"
   >
@@ -101,7 +105,10 @@ watchEffect(() => {
             >Board Columns</label
           >
           <div v-for="(item, index) in formInput.columns" v-bind:key="index" class="column-field">
-            <TextFieldVue v-bind:value="item" @update:value="(e) => onUpdateColumn(e, index)" />
+            <TextFieldVue
+              v-bind:value="item.label"
+              @update:value="(e) => onUpdateColumn(e, index)"
+            />
             <IconCross @click="deleteColumn(index)" />
           </div>
           <ButtonPrime

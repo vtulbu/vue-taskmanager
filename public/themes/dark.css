@@ -18,5 +18,9 @@
   --lines: var(--lines-dark);
   --background-theme: var(--very-dark-gray);
   --background-switcher: var(--very-dark-gray);
-  --hover-item-boards: #20212c66;
+  --hover-item-boards: var(--white);
+  --dialog-delete-edit-board: var(--very-dark-gray);
+  --button-text: var(--white);
+  --hover-card: var(--lines-dark);
+  --text-color-theme: var(--white);
 }

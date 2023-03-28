@@ -23,11 +23,11 @@ const toggleSidebar = () => {
   color: var(--medium-grey);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   padding: 10px 6px;
   border-radius: var(--global-border-radius);
-  margin-left: 18px;
-  margin-top: 20px;
+  margin: 20px 18px 0;
 }
 
 .hide-sidebar:hover {

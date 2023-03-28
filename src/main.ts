@@ -16,6 +16,8 @@ import AutoComplete from 'primevue/autocomplete'
 import Textarea from 'primevue/textarea'
 import Dropdown from 'primevue/dropdown'
 import ProgressSpinner from 'primevue/progressspinner'
+import OverlayPanel from 'primevue/overlaypanel'
+import Checkbox from 'primevue/checkbox'
 
 import 'normalize.css'
 import 'primeicons/primeicons.css'
@@ -54,5 +56,7 @@ app.component('AutoCompletePrime', AutoComplete)
 app.component('TextareaPrime', Textarea)
 app.component('DropdownPrime', Dropdown)
 app.component('ProgressSpinnerPrime', ProgressSpinner)
+app.component('OverlayPanelPrime', OverlayPanel)
+app.component('CheckboxPrime', Checkbox)
 
 app.mount('#app')

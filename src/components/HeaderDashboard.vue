@@ -3,10 +3,11 @@ import { useScreenSize, useTheme, useSidebar, useBoards, useRouteListener } from
 import { storeToRefs } from 'pinia'
 import TypographyElement from './TypographyElement.vue'
 import { useRouter } from 'vue-router'
-import { CREATE } from '@/constants'
+import { BOARD, CREATE } from '@/constants'
 import LogoMobile from './icons/LogoMobile.vue'
 import LogoDark from './icons/LogoDark.vue'
 import LogoLight from './icons/LogoLight.vue'
+import EditDeleteButtonVue from './EditDeleteButton.vue'
 
 const router = useRouter()
 const storeTheme = useTheme()
@@ -45,7 +46,7 @@ const addTask = () => {
       <LogoLight v-if="!isMobile && isDark" />
       <div class="divider" v-if="!isMobile" />
       <div @click="toggleSidebar" class="container-board-name">
-        <TypographyElement as="h2" v-bind:text="selectedItem?.label" />
+        <TypographyElement as="h2" v-bind:text="selectedItem?.label || ''" />
         <img v-if="isMobile && !isSidebarOpen" src="/icons/icon-chevron-down.svg" alt="icon-down" />
         <img v-if="isMobile && isSidebarOpen" src="/icons/icon-chevron-up.svg" alt="icon-right" />
       </div>
@@ -59,7 +60,7 @@ const addTask = () => {
       >
         <img v-if="isMobile" src="/icons/icon-add-task-mobile.svg" alt="icon-search" />
       </ButtonPrime>
-      <img src="/icons/icon-vertical-ellipsis.svg" alt="vertical-ellipses" />
+      <EditDeleteButtonVue v-bind:forItem="BOARD" />
     </div>
   </header>
 </template>

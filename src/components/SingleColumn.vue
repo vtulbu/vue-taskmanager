@@ -1,10 +1,24 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import TypographyElement from './TypographyElement.vue'
-import type { boardsMock } from '@/constants'
+import { VIEW, type boardsMock } from '@/constants'
+
+const router = useRouter()
 
 defineProps<{
   column: (typeof boardsMock)[0]['columns'][0]
 }>()
+
+const openTask = (taskId: string, columnId: string) => {
+  router.push({
+    query: {
+      ...router.currentRoute.value.query,
+      taskId,
+      columnId,
+      taskAction: VIEW
+    }
+  })
+}
 </script>
 
 <template>
@@ -19,9 +33,20 @@ defineProps<{
     </div>
 
     <div class="container-cards">
-      <div class="task-card" v-for="task in column.tasks" :key="task.id">
+      <div
+        class="task-card"
+        v-for="task in column.tasks"
+        :key="task.id"
+        @click="openTask(task.id, column.id)"
+      >
         <TypographyElement as="h4" v-bind:text="task.title" />
-        <TypographyElement as="p" v-bind:text="`0 of 3 subtasks`" class="subtasks" />
+        <TypographyElement
+          as="p"
+          v-bind:text="`${task.subtasks.filter((s) => s.isDone).length} of ${
+            task.subtasks.length
+          } subtasks`"
+          class="subtasks"
+        />
       </div>
     </div>
   </div>
@@ -61,6 +86,13 @@ defineProps<{
   display: flex;
   flex-direction: column;
   gap: 8px;
+  cursor: pointer;
+  transition: all 150ms ease-in-out;
+}
+
+.task-card:hover {
+  background-color: var(--hover-card);
+  transform: scale(1.02);
 }
 
 .subtasks {

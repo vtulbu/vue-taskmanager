@@ -790,7 +790,7 @@ button {
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
 }
 .p-dropdown {
-  background: #fff;
+  background: var(--header);
   border: 1px solid #ced4da;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
   border-radius: 4px;
@@ -834,8 +834,8 @@ button {
   border-color: #e24c4c;
 }
 .p-dropdown-panel {
-  background: #fff;
-  color: #495057;
+  background: var(--header);
+  color: var(--text-color-theme);
   border: 0 none;
   border-radius: 4px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
@@ -864,7 +864,7 @@ button {
   margin: 0;
   padding: 0.75rem 1.25rem;
   border: 0 none;
-  color: #495057;
+  color: var(--text-color-theme);
   background: transparent;
   transition: box-shadow 0.2s;
   border-radius: 0;
@@ -1127,7 +1127,7 @@ button {
   font-family: -apple-system, 'Plus Jakarta Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   font-size: 14px;
-  color: #495057;
+  color: var(--text-color-theme);
   background: #fff;
   padding: 0.75rem 0.75rem;
   border: 1px solid #ced4da;
@@ -1735,6 +1735,7 @@ button {
   border-radius: 24px;
   font-weight: 700;
   font-size: 13px;
+  cursor: pointer;
   /* line-height: 23px; */
 }
 .p-button:enabled:hover {
@@ -1776,12 +1777,15 @@ button {
 }
 .p-button.p-button-text {
   /* background-color: transparent; */
-  background-color: #635fc71a;
+  /* background-color: #635fc71a; */
+  background-color: var(--button-text);
   color: #635fc7;
   border-color: transparent;
 }
 .p-button.p-button-text:enabled:hover {
-  background: rgba(99, 95, 199, 0.04);
+  /* background: rgba(99, 95, 199, 0.04); */
+  background: var(--light-grey);
+  opacity: 0.9;
   color: #635fc7;
   border-color: transparent;
 }
@@ -4350,6 +4354,7 @@ button {
   border: 0 none;
   margin-top: 96px !important;
 }
+
 .p-dialog .p-dialog-header {
   border-bottom: 0 none;
   background: #fff;
@@ -4424,7 +4429,8 @@ button {
   margin-left: 1rem;
 }
 .p-overlaypanel {
-  background: #fff;
+  /* background: #fff; */
+  background: var(--dialog-delete-edit-board);
   color: #495057;
   border: 0 none;
   border-radius: 4px;
@@ -4451,12 +4457,12 @@ button {
 .p-overlaypanel:after {
   border: solid transparent;
   border-color: rgba(255, 255, 255, 0);
-  border-bottom-color: #fff;
+  border-bottom-color: var(--dialog-delete-edit-board);
 }
 .p-overlaypanel:before {
   border: solid transparent;
   border-color: rgba(255, 255, 255, 0);
-  border-bottom-color: #f2f2f2;
+  border-bottom-color: var(--dialog-delete-edit-board);
 }
 .p-overlaypanel.p-overlaypanel-flipped:after {
   border-top-color: #fff;
