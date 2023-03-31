@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { useScreenSize, useSidebar } from '@/stores'
+import IconShowSidebarVue from './icons/IconShowSidebar.vue'
 
 const storeSidebar = useSidebar()
 const storeScreenSize = useScreenSize()
@@ -15,7 +16,7 @@ const toggleSidebar = () => {
 
 <template>
   <button @click="toggleSidebar" class="show-sidebar" v-if="!isMobile && !isSidebarOpen">
-    <img src="/icons/icon-show-sidebar.svg" alt="icon-show-sidebar" />
+    <IconShowSidebarVue />
   </button>
 </template>
 

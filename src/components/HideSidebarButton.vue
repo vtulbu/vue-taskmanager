@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useSidebar } from '@/stores'
+import IconHideSidebar from './icons/IconHideSidebar.vue'
 
 const storeSidebar = useSidebar()
 
@@ -10,7 +11,7 @@ const toggleSidebar = () => {
 
 <template>
   <button @click="toggleSidebar" class="hide-sidebar">
-    <img src="/icons/icon-hide-sidebar.svg" alt="icon-hide-sidebar" />
+    <IconHideSidebar />
     Hide Sidebar
   </button>
 </template>

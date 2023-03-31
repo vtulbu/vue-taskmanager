@@ -2,6 +2,7 @@
 import { useRouter } from 'vue-router'
 import { BOARD, DELETE, EDIT, TASK } from '@/constants'
 import { ref } from 'vue'
+import IconVerticalEllipsisVue from './icons/IconVerticalEllipsis.vue'
 
 const props = defineProps<{
   forItem: typeof TASK | typeof BOARD
@@ -59,7 +60,7 @@ const openDeleteDialog = () => {
 
 <template>
   <ButtonPrime text class="icon-button" @click="toggleOverlay">
-    <img src="/icons/icon-vertical-ellipsis.svg" alt="vertical-ellipses" />
+    <IconVerticalEllipsisVue />
   </ButtonPrime>
   <OverlayPanelPrime ref="overlay" v-bind:baseZIndex="1300">
     <div class="content-overlay">

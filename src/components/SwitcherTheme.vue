@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useTheme } from '@/stores'
 import { storeToRefs } from 'pinia'
+import IconLightThemeVue from './icons/IconLightTheme.vue'
+import IconDarkThemeVue from './icons/IconDarkTheme.vue'
 
 const storeTheme = useTheme()
 
@@ -13,9 +15,9 @@ const toggleTheme = () => {
 
 <template>
   <div class="container-switcher">
-    <img src="/icons/icon-light-theme.svg" alt="icon-light" />
+    <IconLightThemeVue />
     <InputSwitchPrime v-model="isDark" @click="toggleTheme" />
-    <img src="/icons/icon-dark-theme.svg" alt="icon-dark" />
+    <IconDarkThemeVue />
   </div>
 </template>
 

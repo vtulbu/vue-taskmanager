@@ -8,6 +8,9 @@ import LogoMobile from './icons/LogoMobile.vue'
 import LogoDark from './icons/LogoDark.vue'
 import LogoLight from './icons/LogoLight.vue'
 import EditDeleteButtonVue from './EditDeleteButton.vue'
+import IconAddTaskMobile from './icons/IconAddTaskMobile.vue'
+import IconChevronDown from './icons/IconChevronDown.vue'
+import IconChevronUp from './icons/IconChevronUp.vue'
 
 const router = useRouter()
 const storeTheme = useTheme()
@@ -47,8 +50,8 @@ const addTask = () => {
       <div class="divider" v-if="!isMobile" />
       <div @click="toggleSidebar" class="container-board-name">
         <TypographyElement as="h2" v-bind:text="selectedItem?.label || ''" />
-        <img v-if="isMobile && !isSidebarOpen" src="/icons/icon-chevron-down.svg" alt="icon-down" />
-        <img v-if="isMobile && isSidebarOpen" src="/icons/icon-chevron-up.svg" alt="icon-right" />
+        <IconChevronDown v-if="isMobile && !isSidebarOpen" />
+        <IconChevronUp v-if="isMobile && isSidebarOpen" />
       </div>
     </div>
     <div class="right-side">
@@ -58,7 +61,7 @@ const addTask = () => {
         v-bind:disabled="Boolean(!selectedItem?.columns.length)"
         class="button-header"
       >
-        <img v-if="isMobile" src="/icons/icon-add-task-mobile.svg" alt="icon-search" />
+        <IconAddTaskMobile v-if="isMobile" />
       </ButtonPrime>
       <EditDeleteButtonVue v-bind:forItem="BOARD" />
     </div>
