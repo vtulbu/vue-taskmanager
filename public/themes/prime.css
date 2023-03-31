@@ -62,7 +62,8 @@
 ul {
   padding: 0;
 }
-p {
+p,
+h2 {
   margin: 0;
 }
 .no-margin {
@@ -108,7 +109,7 @@ button {
   font-weight: normal;
 }
 .p-component-overlay {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.4) !important;
   transition-duration: 0.2s;
 }
 .p-disabled,
@@ -1736,6 +1737,9 @@ button {
   font-weight: 700;
   font-size: 13px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   /* line-height: 23px; */
 }
 .p-button:enabled:hover {
