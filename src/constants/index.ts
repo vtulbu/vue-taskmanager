@@ -5,57 +5,24 @@ export const screenSizes = {
   lg: 1440
 } as const
 
-export const boardsMock = [
-  {
-    id: 'new',
-    label: 'New',
-    columns: []
-  },
-  {
-    id: 'delete',
-    label: 'Delete',
-    columns: [
-      {
-        id: 'test1',
-        label: 'Test 1',
-        tasks: [
-          {
-            id: 'task1',
-            title: 'Task1',
-            description:
-              "We know what we're planning to build for version one. Now we need to finalise the first pricing model we'll use. Keep iterating the subtasks until we have a coherent proposition.",
-            subtasks: [
-              {
-                id: 'subtask1',
-                label: 'Subtask 1',
-                isDone: true
-              }
-            ]
-          }
-        ]
-      },
-      {
-        id: 'test2',
-        label: 'Test 2',
-        tasks: [
-          {
-            id: 'task2',
-            title: 'Task2',
-            description:
-              "We know what we're planning to build for version one. Now we need to finalise the first pricing model we'll use. Keep iterating the subtasks until we have a coherent proposition.",
-            subtasks: [
-              {
-                id: 'subtask2',
-                label: 'Subtask 2',
-                isDone: false
-              }
-            ]
-          }
-        ]
-      }
-    ]
-  }
-]
+export const boardsMock = Array.from({ length: 10 }, (_, i) => ({
+  id: `board-${i}`,
+  label: `Board ${i}`,
+  columns: Array.from({ length: 6 }, (_, j) => ({
+    id: `column-${i}-${j}`,
+    label: `Column ${j}`,
+    tasks: Array.from({ length: 6 }, (_, k) => ({
+      id: `task-${i}-${j}-${k}`,
+      title: `Task ${k}`,
+      description: `Description ${k}: We know what we're planning to build for version one. Now we need to finalise the first pricing model we'll use. Keep iterating the subtasks until we have a coherent proposition.`,
+      subtasks: Array.from({ length: 5 }, (_, l) => ({
+        id: `subtask-${i}-${j}-${k}-${l}`,
+        label: `Subtask ${l}`,
+        isDone: l % 2 === 0
+      }))
+    }))
+  }))
+}))
 
 export const CREATE = 'create' as const
 export const EDIT = 'edit' as const
