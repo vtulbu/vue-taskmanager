@@ -149,7 +149,7 @@ export const boardsMock = Array.from({ length: 10 }, (_, i) => {
             description: faker.lorem.paragraph(),
             subtasks: Array.from({ length: randomNumberOfSubtasks }, (_, l) => ({
               id: `subtask${i}${j}${k}${l}`,
-              label: sample(developmentSubtasks),
+              label: sample(developmentSubtasks) || '',
               isDone: sample([true, false])
             }))
           }
