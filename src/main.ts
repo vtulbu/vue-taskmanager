@@ -20,6 +20,7 @@ import Checkbox from 'primevue/checkbox'
 
 import 'normalize.css'
 import 'primevue/resources/primevue.min.css'
+import 'primeicons/primeicons.css'
 
 const app = createApp(App)
 

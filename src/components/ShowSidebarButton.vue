@@ -22,6 +22,8 @@ const toggleSidebar = () => {
 
 <style scoped>
 .show-sidebar {
+  width: 56px;
+  height: 56px;
   padding: 19px;
   background: var(--main-purple);
   border-radius: 0px 100px 100px 0px;

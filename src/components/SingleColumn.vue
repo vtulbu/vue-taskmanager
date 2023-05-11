@@ -2,10 +2,14 @@
 import { useRouter } from 'vue-router'
 import TypographyElement from './TypographyElement.vue'
 import { VIEW, type boardsMock } from '@/constants'
+import { useBoards } from '@/stores'
+import { storeToRefs } from 'pinia'
 
 const router = useRouter()
+const storeBoards = useBoards()
+const refsStore = storeToRefs(storeBoards)
 
-defineProps<{
+const props = defineProps<{
   column: (typeof boardsMock)[0]['columns'][0]
 }>()
 
@@ -18,6 +22,24 @@ const openTask = (taskId: string, columnId: string) => {
       taskAction: VIEW
     }
   })
+}
+
+const handleStartDrag = (
+  event: any,
+  task: (typeof props)['column']['tasks'][number],
+  columnId: string
+) => {
+  event.dataTransfer.dropEffect = 'move'
+  event.dataTransfer.effectAllowed = 'move'
+  event.dataTransfer.setData('taskId', task.id)
+  event.dataTransfer.setData('columnId', columnId)
+}
+
+const onDropInTheSameColumn = (event: any, columnId: string, index: number) => {
+  event.preventDefault()
+  const taskId = event.dataTransfer.getData('taskId')
+
+  storeBoards.updateTaskInColumnDrag(columnId, taskId, index)
 }
 </script>
 
@@ -34,10 +56,15 @@ const openTask = (taskId: string, columnId: string) => {
 
     <div class="container-cards">
       <div
+        :id="task.id"
+        draggable="true"
         class="task-card"
-        v-for="task in column.tasks"
+        v-for="(task, index) in column.tasks"
         :key="task.id"
         @click="openTask(task.id, column.id)"
+        @dragstart="handleStartDrag($event, task, column.id)"
+        @dragover.prevent
+        @drop="onDropInTheSameColumn($event, column.id, index)"
       >
         <TypographyElement as="h4" v-bind:text="task.title" />
         <TypographyElement
@@ -55,6 +82,7 @@ const openTask = (taskId: string, columnId: string) => {
 <style scoped>
 .column {
   width: 280px;
+  min-width: 280px;
   margin: 0 16px;
 }
 

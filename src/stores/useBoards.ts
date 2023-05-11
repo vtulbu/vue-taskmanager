@@ -139,12 +139,13 @@ export const useBoards = defineStore('boards', () => {
       const column = selectedItem.value?.columns.find((c) => c.id === task.columnId)
 
       if (column) {
-        column.tasks.push({
+        const oldTask = currentColumn?.tasks[taskIndex]
+        const newTask = {
           id: editedTaskId,
           title: task.title,
           description: task.description,
           subtasks: task.subtasks.map((s) => {
-            const subtask = currentColumn?.tasks[taskIndex]?.subtasks.find((sub) => sub.id === s.id)
+            const subtask = oldTask?.subtasks.find((sub) => sub.id === s.id)
 
             if (subtask) {
               return {
@@ -160,9 +161,9 @@ export const useBoards = defineStore('boards', () => {
               isDone: false
             }
           })
-        })
+        }
 
-        currentColumn?.tasks.splice(taskIndex, 1)
+        column.tasks.splice(taskIndex, 1, newTask)
 
         router.push({
           name: 'Boards',
@@ -171,6 +172,29 @@ export const useBoards = defineStore('boards', () => {
           }
         })
       }
+    }
+  }
+
+  const updateTaskColumnDrag = (oldColumnId: string, newColumnId: string, taskId: string) => {
+    const oldColumn = selectedItem.value?.columns.find((c) => c.id === oldColumnId)
+    const newColumn = selectedItem.value?.columns.find((c) => c.id === newColumnId)
+    const taskIndex = oldColumn?.tasks.findIndex((t) => t.id === taskId)
+
+    if (taskIndex !== undefined && taskIndex !== -1 && oldColumn) {
+      newColumn?.tasks.push(oldColumn.tasks[taskIndex])
+      oldColumn?.tasks.splice(taskIndex, 1)
+    }
+  }
+
+  const updateTaskInColumnDrag = (columnId: string, taskId: string, newIndex: number) => {
+    const column = selectedItem.value?.columns.find((c) => c.id === columnId)
+    const taskIndex = column?.tasks.findIndex((t) => t.id === taskId)
+
+    if (taskIndex !== undefined && taskIndex !== -1) {
+      const task = column?.tasks[taskIndex]
+      if (!task) return
+      column?.tasks.splice(taskIndex, 1)
+      column?.tasks.splice(newIndex, 0, task)
     }
   }
 
@@ -235,6 +259,8 @@ export const useBoards = defineStore('boards', () => {
     deleteTask,
     updateTask,
     updateTaskStatus,
-    updateSubtaskStatus
+    updateSubtaskStatus,
+    updateTaskColumnDrag,
+    updateTaskInColumnDrag
   }
 })

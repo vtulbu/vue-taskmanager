@@ -20,6 +20,7 @@ const { isMobile } = storeToRefs(storeScreenSize)
 
 <style scoped>
 .tasks-board {
+  overflow: scroll;
   height: calc(100% - var(--header-height-mobile));
   width: 100%;
   position: absolute;
